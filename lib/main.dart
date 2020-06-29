@@ -1,4 +1,3 @@
-import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -24,7 +23,8 @@ class MyAppState extends State<MyApp> {
   List data_list;
   void fetch_data() async {
     http.Response response = await http
-        .get('http://newsapi.org/v2/everything?q=tech&apiKey=$apikey');
+        .get('https://newsapi.org/v2/top-headlines?country=in&apiKey=$apikey');
+
     var dynresponse = jsonDecode(response.body);
     setState(() {
       data_list = dynresponse['articles'];
@@ -41,7 +41,6 @@ class MyAppState extends State<MyApp> {
           body: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
-
                 title: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -64,15 +63,6 @@ class MyAppState extends State<MyApp> {
                       child: Icon(Icons.ac_unit),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {
-                      showSearch(
-                        context: context,
-                        delegate: CustomSearchDelegate(),
-                      );
-                    },
-                  ),
                 ],
 
                 centerTitle: true,
@@ -87,6 +77,7 @@ class MyAppState extends State<MyApp> {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, index) => ListTile(
+                    contentPadding: EdgeInsets.all(10.0),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -110,139 +101,4 @@ class MyAppState extends State<MyApp> {
       ),
     );
   }
-}
-
-class MyHome extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-class Home extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: SearchBar(),
-        ),
-      ),
-    );
-  }
-}
-
-class CustomSearchDelegate extends SearchDelegate {
-  MyAppState data = new MyAppState();
-  List searchlist;
-  void initstate() {
-    searchlist = data.data_list;
-    print(searchlist.length);
-  }
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: Icon(Icons.cancel),
-        onPressed: () {
-          query = '';
-        },
-      )
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return Container();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-//    final mylist = query.isEmpty
-//        ? loadFoodItem()
-//        : loadFoodItem().where((p) => (p.title.contains(query))||p.category.contains(query)).toList();
-
-    return ListView.builder(
-        itemCount: searchlist.length,
-        itemBuilder: (context, index) {
-//          final FoodItem listitem = mylist[index];
-//          return ListTile(
-//            onTap: (){
-//
-//            },
-//            title: Column(
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//              children: <Widget>[
-//                Text(
-//                  listitem.title,
-//                  style: TextStyle(fontSize: 20),
-//                ),
-//                Text(listitem.category),
-//                Divider(),
-//              ],
-//            ),
-//          );
-          return new Text(data.data_list[index]['title']);
-        });
-  }
-}
-
-class FoodItem {
-  final String title;
-  final String category;
-  FoodItem({
-    this.title,
-    this.category,
-  });
-}
-
-List<FoodItem> loadFoodItem() {
-  var fi = [];
-//  <FoodItem>[
-//    FoodItem(
-//      title: "chocolate",
-//      category: "Milkshake",
-//    ),
-//    FoodItem(
-//      title: "Hakka Noodles",
-//      category: "Chinese",
-//    ),
-//    FoodItem(
-//      title: "Samosa",
-//      category: "Indian",
-//    ),
-//    FoodItem(
-//      title: "Oreo Shake",
-//      category: "Milkshakes",
-//    ),
-//    FoodItem(
-//      title: "Spring Roles",
-//      category: "Chinese",
-//    ),
-//    FoodItem(
-//      title: "Coke",
-//      category: "Cold Drinks",
-//    ),
-//    FoodItem(
-//      title: "Dum Aloo",
-//      category: "Indian",
-//    ),
-//    FoodItem(
-//      title: "Pizza",
-//      category: "Italian",
-//    ),
-//  ];
-  return fi;
 }
